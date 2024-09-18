@@ -53,7 +53,9 @@ The `scripts` section is also updated to include commands for building and runni
 ### 5. Install Required Packages
 We install the necessary packages for our project:
 - **express**: A web framework for Node.js that simplifies building web applications and APIs.
-- **typescript**: A superset of JavaScript that adds static types, making it easier to catch errors during development.
+
+- **typescript**: TypeScript is a programming language that enhances JavaScript by introducing features such as type annotations, interfaces, and advanced tooling. It allows developers to define the structure of their code more clearly, leading to improved readability and maintainability. By providing a more structured approach to coding, TypeScript helps teams collaborate more effectively and reduces the likelihood of runtime errors, making it a popular choice for large-scale applications.
+
 - **@types/node** and **@types/express**: Type definitions for Node.js and Express, allowing TypeScript to understand the types used in these libraries.
 - **ts-node**: A TypeScript execution environment for Node.js, enabling us to run TypeScript files directly.
 
