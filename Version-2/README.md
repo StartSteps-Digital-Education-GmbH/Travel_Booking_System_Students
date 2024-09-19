@@ -218,15 +218,16 @@ To set up MongoDB on your local machine, follow these steps:
 
 #### Step 4: Build the User Service with MongoDB
 
-1. **Edit `src/user-service/server.ts`**: Open `src/user-service/server.ts` and add the following code:
+1. **Edit `src/user-service/server.ts`**: Open `src/user-service/server.ts` and replace the content with the following code. This code sets up the Express server and connects to MongoDB.
+
    ```typescript
    // src/user-service/server.ts
-   import express from 'express';
-   import mongoose from 'mongoose';
+   import express from 'express'; // Import Express framework
+   import mongoose from 'mongoose'; // Import Mongoose for MongoDB interaction
    import userRoutes from './userRoutes'; // Import user routes
 
-   const app = express();
-   const PORT = process.env.PORT || 3001; // User service runs on port 3001
+   const app = express(); // Create an Express application
+   const PORT = process.env.PORT || 3001; // Set the port for the user service
 
    app.use(express.json()); // Middleware to parse JSON bodies
 
@@ -235,25 +236,26 @@ To set up MongoDB on your local machine, follow these steps:
      useNewUrlParser: true,
      useUnifiedTopology: true,
    })
-   .then(() => console.log('Connected to MongoDB'))
-   .catch(err => console.error('Could not connect to MongoDB:', err));
+   .then(() => console.log('Connected to MongoDB')) // Log success message
+   .catch(err => console.error('Could not connect to MongoDB:', err)); // Log error message
 
    // Use user routes for handling '/users' endpoint
    app.use('/users', userRoutes);
 
    app.listen(PORT, () => {
-     console.log(`User Service is running on port ${PORT}`);
+     console.log(`User Service is running on port ${PORT}`); // Log the running port
    });
    ```
 
-2. **Edit `src/user-service/userRoutes.ts`**: Open `src/user-service/userRoutes.ts` and add the following code:
+2. **Edit `src/user-service/userRoutes.ts`**: Open `src/user-service/userRoutes.ts` and replace the content with the following code. This code defines the routes for user management.
+
    ```typescript
    // src/user-service/userRoutes.ts
-   import express from 'express';
-   import { body, validationResult } from 'express-validator'; // Import express-validator
+   import express from 'express'; // Import Express framework
+   import { body, validationResult } from 'express-validator'; // Import express-validator for input validation
    import User from './userModel'; // Import User model
 
-   const router = express.Router();
+   const router = express.Router(); // Create a new router instance
 
    // Route to create a new user
    router.post(
@@ -268,7 +270,7 @@ To set up MongoDB on your local machine, follow these steps:
          return res.status(400).json({ errors: errors.array() }); // Respond with errors
        }
 
-       const { name, email } = req.body;
+       const { name, email } = req.body; // Destructure name and email from request body
        const newUser = new User({ name, email }); // Create a new user instance
        await newUser.save(); // Save user to MongoDB
        res.status(201).send(newUser); // Respond with the created user
@@ -283,71 +285,73 @@ To set up MongoDB on your local machine, follow these steps:
 
    // Route to get a user by ID
    router.get('/:id', async (req, res) => {
-     const userId = req.params.id;
+     const userId = req.params.id; // Get user ID from request parameters
      const user = await User.findById(userId); // Find user by ID
      if (!user) {
-       return res.status(404).send({ message: 'User not found' });
+       return res.status(404).send({ message: 'User not found' }); // Respond with not found message
      }
      res.status(200).send(user); // Respond with the found user
    });
 
    // Route to update a user
    router.put('/:id', async (req, res) => {
-     const userId = req.params.id;
+     const userId = req.params.id; // Get user ID from request parameters
      const user = await User.findByIdAndUpdate(userId, req.body, { new: true }); // Update user
      if (!user) {
-       return res.status(404).send({ message: 'User not found' });
+       return res.status(404).send({ message: 'User not found' }); // Respond with not found message
      }
      res.status(200).send(user); // Respond with the updated user
    });
 
    // Route to delete a user
    router.delete('/:id', async (req, res) => {
-     const userId = req.params.id;
+     const userId = req.params.id; // Get user ID from request parameters
      const user = await User.findByIdAndDelete(userId); // Remove user
      if (!user) {
-       return res.status(404).send({ message: 'User not found' });
+       return res.status(404).send({ message: 'User not found' }); // Respond with not found message
      }
      res.status(204).send(); // Respond with no content
    });
 
-   export default router;
+   export default router; // Export the router
    ```
 
-3. **Create User Model**: Create a new file `src/user-service/userModel.ts` and add the following code:
+3. **Create User Model**: Create a new file `src/user-service/userModel.ts` and add the following code. This code defines the User model for MongoDB.
+
    ```typescript
    // src/user-service/userModel.ts
-   import mongoose, { Schema, Document } from 'mongoose';
+   import mongoose, { Schema, Document } from 'mongoose'; // Import Mongoose and types
 
    // User interface to define the structure of a user
    interface IUser extends Document {
-     name: string;
-     email: string;
+     name: string; // User's name
+     email: string; // User's email
    }
 
    // User schema definition
    const userSchema: Schema = new Schema({
-     name: { type: String, required: true },
-     email: { type: String, required: true, unique: true },
+     name: { type: String, required: true }, // Name is required
+     email: { type: String, required: true, unique: true }, // Email is required and must be unique
    });
 
    // User model
-   const User = mongoose.model<IUser>('User', userSchema);
+   const User = mongoose.model<IUser>('User', userSchema); // Create User model
 
-   export default User;
+   export default User; // Export User model
    ```
 
 #### Step 5: Build the Flight Service with MongoDB
 
-1. **Edit `src/flight-service/server.ts`**: Open `src/flight-service/server.ts` and add the following code:
+1. **Edit `src/flight-service/server.ts`**: Open `src/flight-service/server.ts` and replace the content with the following code. This code sets up the Express server and connects to MongoDB.
+
    ```typescript
    // src/flight-service/server.ts
-   import express from 'express';
-   import mongoose from 'mongoose';
+   import express from 'express'; // Import Express framework
+   import mongoose from 'mongoose'; // Import Mongoose for MongoDB interaction
    import flightRoutes from './flightRoutes'; // Import flight routes
 
-   const app = express();
-   const PORT = process.env.PORT || 3002; // Flight service runs on port 3002
+   const app = express(); // Create an Express application
+   const PORT = process.env.PORT || 3002; // Set the port for the flight service
 
    app.use(express.json()); // Middleware to parse JSON bodies
 
@@ -356,25 +360,26 @@ To set up MongoDB on your local machine, follow these steps:
      useNewUrlParser: true,
      useUnifiedTopology: true,
    })
-   .then(() => console.log('Connected to MongoDB'))
-   .catch(err => console.error('Could not connect to MongoDB:', err));
+   .then(() => console.log('Connected to MongoDB')) // Log success message
+   .catch(err => console.error('Could not connect to MongoDB:', err)); // Log error message
 
    // Use flight routes for handling '/flights' endpoint
    app.use('/flights', flightRoutes);
 
    app.listen(PORT, () => {
-     console.log(`Flight Service is running on port ${PORT}`);
+     console.log(`Flight Service is running on port ${PORT}`); // Log the running port
    });
    ```
 
-2. **Edit `src/flight-service/flightRoutes.ts`**: Open `src/flight-service/flightRoutes.ts` and add the following code:
+2. **Edit `src/flight-service/flightRoutes.ts`**: Open `src/flight-service/flightRoutes.ts` and replace the content with the following code. This code defines the routes for flight management.
+
    ```typescript
    // src/flight-service/flightRoutes.ts
-   import express from 'express';
-   import { body, validationResult } from 'express-validator'; // Import express-validator
+   import express from 'express'; // Import Express framework
+   import { body, validationResult } from 'express-validator'; // Import express-validator for input validation
    import Flight from './flightModel'; // Import Flight model
 
-   const router = express.Router();
+   const router = express.Router(); // Create a new router instance
 
    // Route to create a new flight
    router.post(
@@ -390,7 +395,7 @@ To set up MongoDB on your local machine, follow these steps:
          return res.status(400).json({ errors: errors.array() }); // Respond with errors
        }
 
-       const { origin, destination, price } = req.body;
+       const { origin, destination, price } = req.body; // Destructure origin, destination, and price from request body
        const newFlight = new Flight({ origin, destination, price }); // Create a new flight instance
        await newFlight.save(); // Save flight to MongoDB
        res.status(201).send(newFlight); // Respond with the created flight
@@ -405,65 +410,66 @@ To set up MongoDB on your local machine, follow these steps:
 
    // Route to get a flight by ID
    router.get('/:id', async (req, res) => {
-     const flightId = req.params.id;
+     const flightId = req.params.id; // Get flight ID from request parameters
      const flight = await Flight.findById(flightId); // Find flight by ID
      if (!flight) {
-       return res.status(404).send({ message: 'Flight not found' });
+       return res.status(404).send({ message: 'Flight not found' }); // Respond with not found message
      }
      res.status(200).send(flight); // Respond with the found flight
    });
 
    // Route to delete a flight
    router.delete('/:id', async (req, res) => {
-     const flightId = req.params.id;
+     const flightId = req.params.id; // Get flight ID from request parameters
      const flight = await Flight.findByIdAndDelete(flightId); // Remove flight
      if (!flight) {
-       return res.status(404).send({ message: 'Flight not found' });
+       return res.status(404).send({ message: 'Flight not found' }); // Respond with not found message
      }
      res.status(204).send(); // Respond with no content
    });
 
-   export default router;
+   export default router; // Export the router
    ```
 
-3. **Create Flight Model**: Create a new file `src/flight-service/flightModel.ts` and add the following code:
+3. **Create Flight Model**: Create a new file `src/flight-service/flightModel.ts` and add the following code. This code defines the Flight model for MongoDB.
+
    ```typescript
    // src/flight-service/flightModel.ts
-   import mongoose, { Schema, Document } from 'mongoose';
+   import mongoose, { Schema, Document } from 'mongoose'; // Import Mongoose and types
 
    // Flight interface to define the structure of a flight
    interface IFlight extends Document {
-     origin: string;
-     destination: string;
-     price: number;
+     origin: string; // Flight's origin
+     destination: string; // Flight's destination
+     price: number; // Flight's price
    }
 
    // Flight schema definition
    const flightSchema: Schema = new Schema({
-     origin: { type: String, required: true },
-     destination: { type: String, required: true },
-     price: { type: Number, required: true },
+     origin: { type: String, required: true }, // Origin is required
+     destination: { type: String, required: true }, // Destination is required
+     price: { type: Number, required: true }, // Price is required
    });
 
    // Flight model
-   const Flight = mongoose.model<IFlight>('Flight', flightSchema);
+   const Flight = mongoose.model<IFlight>('Flight', flightSchema); // Create Flight model
 
-   export default Flight;
+   export default Flight; // Export Flight model
    ```
 
 #### Step 6: Build Error Handling
 
-1. **Error Handling in Express**: Modify `src/user-service/server.ts` to include error handling middleware:
-   ```typescript
-   // src/user-service/server.ts
-   // ... previous code ...
+1. **Error Handling in Express**: Modify `src/user-service/server.ts` to include error handling middleware. Add the following code at the end of the file, just before the closing bracket of the `app.listen` function.
 
+   ```typescript
    // Central error handling middleware
    app.use((err, req, res, next) => {
      console.error(err.stack); // Log the error stack
      res.status(err.status || 500).send({ message: err.message || 'Something went wrong!' }); // Respond with error message
    });
    ```
+
+   - **Explanation**: This middleware catches any errors that occur in the application. It logs the error stack to the console and sends a response with the error message and status code. If no specific status is set, it defaults to 500 (Internal Server Error).
 
 #### Step 7: Build and Run the Application
 
